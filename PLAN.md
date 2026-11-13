@@ -1,152 +1,99 @@
 # 🃏 Multi-UNO — Project Plan & Task Tracker
 
-Online multiplayer UNO built for browsers across **PC, tablet, and phone**—easy drop-in play with just a display name and Room ID, rich custom SVG card illustrations & animations, multiple UNO game modes, AI bots, and Docker + Cloudflare Tunnel deployment on `cs31`.
+Online multiplayer UNO for **PC, tablet, and phone browsers**—join in seconds with just a display name and Room ID, featuring rich custom SVG card illustrations & animations, multiple UNO modes, AI bots, mobile gesture controls, and Docker + Cloudflare Tunnel deployment on `cs31`.
 
-> **Current Status:** Phase 0 (Planning & Environment Setup) — **No application code written yet.**
-
----
-
-## 1. Core Product Requirements
-
-- **Instant Drop-In Join:** Enter a display name only (no accounts/login). Create a room to get a short shareable **Room ID** (e.g., `UNO-4829` or `ABCD`) + invite URL / QR code, or join an existing room by ID.
-- **Player Capacity:** **2 to 6 players** per room (mix of human players and AI bots).
-- **Host Room Controls:**
-  - Game mode selector
-  - Add / remove AI bots (configurable difficulty: Casual / Smart)
-  - Turn timer (`Off`, `15s`, `30s`, `45s`)
-  - Match win condition (`Single Round` vs `Target Score: 250 / 500 pts`)
-  - Starting hand size (`5`, `7`, `10`) & house-rule toggles
-  - Room lock / kick / transfer host / rematch in same lobby
-- **Authoritative & Resilient Gameplay:**
-  - Server owns deck & hands (clients never receive opponent cards—only card counts and public discard pile)
-  - `localStorage` reconnect token so phone refreshes or brief Wi-Fi drops restore your exact seat & hand
-  - Optional bot auto-takeover if a player disconnects mid-match or times out
+> **Current Progress:** Phase 1 Complete (`@uno/shared` Engine & 16/16 Unit Tests Passing) — Ready for **Phase 2 (`@uno/server`)**
 
 ---
 
-## 2. Game Modes (Classic + Suggested Variants)
+## Architecture & Decisions Summary
 
-| Mode | Core Twist | Why Include It |
-| :--- | :--- | :--- |
-| **Classic UNO** | Official rules: match color/number/symbol, `Skip`, `Reverse` (acts as Skip in 2P), `+2`, `Wild`, `Wild +4`, `UNO!` call & `+2` catch penalty. | Familiar baseline everyone knows immediately. |
-| **UNO No Mercy** *(Recommended)* | **Progressive stacking** (`+2` / `+4` / `+6` / `+10`), **7-0 Rule** (`7` = swap hands with any player, `0` = rotate all hands in turn direction), **Discard All** (drop all matching-color cards at once), and **25-Card Mercy Elimination**. | Huge replay value and hilarious comeback/chaos moments with 3–6 friends. |
-| **UNO Flip! (Light & Dark)** | Two-sided cards! Starts on **Light Side** (`+1`, `Skip`, `Flip`); playing a **Flip** card flips the entire table, deck, and all hands to **Dark Side** (`Draw +5`, `Skip Everyone` [play again!], `Wild Draw Color`) until flipped back. | Visually dramatic 3D card-flip animations and tactical shifts. |
-| **Blitz / Speed UNO** | **Jump-In** (play an identical color + value card out of turn if you react first!), **Draw-Until-Playable**, mandatory fast turn timer (`15s`). | Keeps everyone engaged even when it's not their turn. |
-| **Custom House Rules** | Host mixes and matches individual toggles (`Stacking`, `7-0`, `Jump-In`, `Draw Until Match`, `Hand Size`). | Lets friend groups play their exact local rules. |
-
----
-
-## 3. Visual Design, Illustration & Animation Spec
-
-- **Tabletop Aesthetic:** Tactile arcade card lounge—deep felt/slate arena with subtle radial spotlight, glowing active-turn seat ring, and dynamic table rim color matching the current active color (plus colorblind-friendly corner badges/patterns on every card).
-- **Custom SVG Card Art:** Crisp bespoke vector illustrations for:
-  - Number cards (`0–9` with bold corner indices and subtle diagonal emblem)
-  - Action cards (`Skip`, `Reverse`, `Draw +2`, `Wild`, `Wild +4`, plus mode specials like `+6`, `+10`, `Discard All`, `Flip`, `Skip Everyone`)
-  - Light & Dark card backs for **UNO Flip!**
-- **Animations (Framer Motion + CSS 3D):**
-  - Round-start **deal burst** flying cards from center deck to all seats
-  - **Curved fanned hand** with smooth hover/touch lift and glowing playable-card outline
-  - **Arced card throw** from hand/opponent avatar onto discard pile with slight natural rotation
-  - **3D card flip** on draw and **full-table Light ↔ Dark flip** in UNO Flip
-  - **Spinning direction orbit** around center table reversing smoothly on `Reverse`
-  - **Callout overlays & particle bursts** for `SKIP!`, `+4 STACK!`, `UNO!`, `CAUGHT!`, and winner confetti podium
-- **Zero-Latency Audio (Web Audio API):** Procedural SFX for card snap, shuffle, draw swoosh, illegal-card thud, UNO buzzer, and victory chime (with mute toggle).
+- **Codebase Approach:** Clean-slate TypeScript monorepo in `/home/BYACT/Projects/Multi-UNO` (`https://github.com/someact/UNO`), leaving the old inactive `~/uno-game` directory on `cs31` untouched and deploying cleanly to `~/multi-uno`.
+- **Server Port & Domain Routing:** Docker Compose binds **`127.0.0.1:3150->3000`** (`HOST_PORT` configurable), verified free on `cs31` and aligned with `cloudflared` loopback routing (`http://localhost:3150`).
+- **Player Capacity:** **2 to 6 players** per room (humans + AI bots), plus optional **Spectator** slot for late joiners who auto-enter the next round.
+- **Game Modes Included:**
+  1. **Classic UNO** (with optional `Wild +4` Challenge/Bluff rule & Draw-1 Play-or-Keep)
+  2. **UNO No Mercy** (progressive `+2/+4/+6/+10` stacking, `7` swap / `0` rotate hands, `Discard All` color, `25`-card Mercy elimination)
+  3. **UNO Flip!** (two-sided Light/Dark cards, `Flip` inverts entire table/hands, Dark `+5`, `Skip Everyone`, `Wild Draw Color`)
+  4. **Blitz / Speed UNO** (`Jump-In` out-of-turn exact match with server race lock, `Draw-Until-Playable`, `15s` turn timer)
+  5. **Custom House Rules** (mix-and-match rule toggles + starting hand size `5 / 7 / 10`)
 
 ---
 
-## 4. Cross-Device UX & Card Interaction Spec (PC / Tablet / Phone)
+## Task Tracking by Phase
 
-- **Adaptive 2–6 Player Layout:**
-  - **Phone Portrait (`360px–600px`):** Compact top/arc opponent badges showing avatar, name, card count mini-stack, turn progress ring, and UNO badge; large centered Draw Deck + Discard Pile; generous curved/scrollable bottom hand tray in thumb reach.
-  - **Tablet & Desktop (`768px+`):** Full radial oval table positioning opponents cleanly around top/left/right edges, spacious center arena, and non-overlapping reaction/event drawer.
-- **Multi-Modal Card Controls:**
-  - **Swipe Up to Play (Touch):** Flick/swipe any playable card upward past a release threshold toward the discard zone (highlighted magnetic drop target).
-  - **Drag & Drop (Touch & Mouse):** Grab any card and drag it smoothly onto the discard pile; springs back cleanly if invalid or cancelled.
-  - **Tap-to-Preview + Tap-to-Play (Safe Mode for Crowded Hands):** First tap raises/inspects the card; second tap (or tapping the discard pile) plays it—great on small phone screens when holding 12+ cards.
-  - **Horizontal Hand Swipe / Scroll:** Smooth scroll/pan across fanned cards when holding large hands.
-  - **Keyboard Shortcuts (PC):** `ArrowLeft`/`ArrowRight` (or `1–9`) select card, `Enter` play, `Space` draw, `U` call `UNO!`.
-  - **Color Picker & Target Picker Modals:** Instant radial 4-color wheel for Wilds (pre-orientable or fast tap) and quick seat picker when playing a `7` swap in No Mercy.
+### Phase 0 — Environment, Repo & Design Alignment
+- [x] Verify SSH connectivity (`cs31@100.104.87.92`) and Docker / `cloudflared` environment
+- [x] Verify `gh` CLI auth (`someact`) and push access to `https://github.com/someact/UNO`
+- [x] Identify non-conflicting server port (`3150`) for Cloudflare Tunnel ingress
+- [x] Test initial commit & push of `PLAN.md` to `https://github.com/someact/UNO` (`bc1e62b`)
+- [x] Incorporate edge-case rules, mobile gesture physics, and spectator/host-migration specs into separated phases
 
 ---
 
-## 5. Technical Stack & Repository Layout
+### Phase 1 — Monorepo Setup & Shared Game Engine (`@uno/shared`)
+**Goal:** Build a strictly typed, framework-agnostic, 100% unit-tested UNO rule engine supporting all 5 modes, 2–6 players, and anti-cheat sanitized state views.
 
-```text
-Multi-UNO/                     # Local workspace -> github.com/someact/UNO
-├── PLAN.md                    # This living plan & task tracker
-├── Dockerfile                 # Multi-stage production build (client + server)
-├── docker-compose.yml         # Maps 127.0.0.1:${HOST_PORT:-3150}:3000
-├── package.json               # npm workspaces monorepo root
-└── packages/
-    ├── shared/                # @uno/shared: types, deck builders, pluggable mode rule engines
-    ├── server/                # @uno/server: Node + Express + Socket.IO, rooms, bots, timers
-    └── client/                # @uno/client: React + Vite + Tailwind + Framer Motion + gesture physics
-```
-
----
-
-## 6. Deployment & Networking Plan (`cs31` + Cloudflare Tunnel)
-
-- **Target Server:** `cs31@100.104.87.92` (Arch Linux, Docker + `cloudflared.service` active).
-- **Assigned Host Port:** **`127.0.0.1:3150->3000`** (configurable via `HOST_PORT`, default `3150`).
-  - Verified free on `cs31` (`3090`, `3100`, `3131`, `3140`, `8120` are used by existing containers).
-  - Matches `cs31`'s `cloudflared` loopback pattern so you can point your domain/subdomain (e.g., `uno.yourdomain.com`) to `http://localhost:3150` with WebSocket support enabled automatically over HTTPS/WSS.
-- **Workflow:**
-  1. Build, test, and verify locally in `/home/BYACT/Projects/Multi-UNO`
-  2. Commit & push to `https://github.com/someact/UNO` (`git` + `gh` credentials)
-  3. Pull & deploy on `cs31` via `docker compose up -d --build`
+- [x] **1.1** Initialize npm workspaces monorepo (`package.json`, `tsconfig.base.json`, `.gitignore`, `packages/shared`) with TypeScript strict mode & Vitest
+- [x] **1.2** Define core schemas in `@uno/shared`: dual-face `Card` (`light` + optional `dark`), `SeatPlayer`, `RoomConfig`, `HouseRules`, `GameAction`, `PendingAction`, and `ClientGameState` (no opponent card leaks)
+- [x] **1.3** Implement deterministic deck builders, Fisher-Yates shuffle, auxiliary-deck exhaustion fallback, and hand sorting utilities
+- [x] **1.4** Implement core turn flow (`findNextActiveIndex`, 2-player `Reverse` = `Skip`, `Draw-1` play-or-keep, `UNO!` shout & `CATCH!` `+2` penalty, round/match scoring)
+- [x] **1.5** Implement **Classic UNO** rules + optional **Wild +4 Bluff Challenge** (`+4` to offender if guilty, `+6` to challenger if innocent)
+- [x] **1.6** Implement **UNO No Mercy** rules (progressive `+2/+4/+6/+10` stacking, `7` swap target, `0` rotate hands, `Discard All`, `25`-card Mercy elimination & last-standing win)
+- [x] **1.7** Implement **UNO Flip!** rules (Light/Dark active side switching, `Flip`, Light `+1` / `Wild +2`, Dark `+5` / `Skip Everyone` / `Wild Draw Color`)
+- [x] **1.8** Implement **Blitz / Speed UNO** & **Custom House Rules** (`Jump-In` out-of-turn exact match, `Draw-Until-Playable`, mode preset builder)
+- [x] **1.9** Write comprehensive Vitest unit tests for all modes, edge cases, deck reshuffling, and sanitized client projections; verify `npm test` & `npm run build` pass, then commit & push Phase 1 to GitHub
 
 ---
-
-## 7. Task Tracking Checklist
-
-### Phase 0 — Environment & Design Alignment (Current)
-- [x] Verify SSH connectivity and Docker/Cloudflared setup on `cs31@100.104.87.92`
-- [x] Verify `gh` CLI authentication (`someact`) and `https://github.com/someact/UNO` access
-- [x] Identify non-conflicting server port (`3150`) for Cloudflare Tunnel routing
-- [x] Create `PLAN.md` task tracker (no application code yet)
-- [ ] Test initial commit & push of `PLAN.md` to `https://github.com/someact/UNO` using `git`/`gh`
-- [ ] Confirm design preferences with user (prototype reuse vs clean build, launch modes, art theme, deploy directory on `cs31`)
-
-### Phase 1 — Monorepo & Shared Game Engine (`@uno/shared`)
-- [ ] Initialize npm workspace monorepo (`shared`, `server`, `client`) with TypeScript strict mode & Vitest
-- [ ] Define core card, player, room config, action, and sanitized client-state schemas
-- [ ] Implement pluggable `GameModeEngine` interface + deck generators
-- [ ] Implement **Classic UNO** rules + win scoring + UNO penalty/catch state machine
-- [ ] Implement **UNO No Mercy** rules (stacking `+2/+4/+6/+10`, `7-0` swap/rotate, `Discard All`, `25`-card elimination)
-- [ ] Implement **UNO Flip!** rules (Light/Dark dual-sided cards, `Flip`, `+5`, `Skip Everyone`, `Wild Draw Color`)
-- [ ] Implement **Blitz / Speed UNO** & **Custom House Rules** toggles (`Jump-In`, `Draw-Until-Playable`)
-- [ ] Write comprehensive unit tests covering every mode, edge case, and 2–6 player turn transitions
 
 ### Phase 2 — Authoritative Multiplayer Server (`@uno/server`)
-- [ ] Set up Express + Socket.IO server with health check endpoint (`/healthz`) and production static serving
-- [ ] Build room lifecycle manager (create room, short Room ID generator, join validation up to 6 players, host controls, lobby chat/ready state)
-- [ ] Implement session reconnect tokens & mid-game disconnect grace window / bot fallback
-- [ ] Build server-side turn countdown timers + automatic timeout action
-- [ ] Build AI Bot engine (smart color choice, stacking awareness, 7-swap target heuristic, UNO call chance)
-- [ ] Add integration tests for Socket.IO room lifecycle, reconnects, Jump-In race handling, and bot turns
+**Goal:** Real-time Socket.IO game server with room management, reconnect persistence, smart AI bots, timers, and abuse protection.
 
-### Phase 3 — Visual System, Card Art & Audio (`@uno/client`)
-- [ ] Set up React + Vite + Tailwind CSS + Framer Motion + design tokens (light/dark table themes & colorblind badges)
-- [ ] Design custom SVG card artwork & card backs (Classic, No Mercy specials, UNO Flip Light & Dark sets)
-- [ ] Build animated table center (Draw Deck, Discard Pile, spinning Direction Orbit, stacked-penalty counter badge)
-- [ ] Build opponent seat cards/avatars around radial table with active turn countdown ring & mini card stacks
-- [ ] Implement Web Audio API procedural sound effects + mute/volume toggle
+- [ ] **2.1** Set up Express + Socket.IO server with `/healthz` endpoint, CORS/origin support, and production static serving
+- [ ] **2.2** Build `RoomManager` & `Room` lifecycle (short Room ID generator, max 6 players, late-joiner Spectator mode, automatic Host Migration on disconnect, idle room TTL garbage collection)
+- [ ] **2.3** Implement `localStorage` session token reconnection + optional bot auto-takeover on disconnect
+- [ ] **2.4** Implement server-authoritative turn countdown timers + automatic timeout fallback (auto-draw / keep / random valid color)
+- [ ] **2.5** Build AI Bot engine (`Casual` & `Smart` difficulties: stack defense, best-color selection, `7`-swap targeting lowest-card rival, human-like reaction delay & UNO shout probability)
+- [ ] **2.6** Add input sanitization, chat/reaction rate limiting, and Socket.IO integration tests; commit & push Phase 2 to GitHub
 
-### Phase 4 — Cross-Device UX & Interactive Controls (`@uno/client`)
-- [ ] Build Lobby & Home Screen (Name input, Create Room, Join by Room ID / `?room=XXXX` auto-fill, QR share sheet, Host Rule Configurator)
-- [ ] Implement unified gesture hand tray: **Swipe Up to Play**, **Drag & Drop to Pile**, **Tap-to-Preview / Double-Tap**, and horizontal pan for large hands
-- [ ] Implement desktop hover fanning + keyboard navigation shortcuts
-- [ ] Build interactive Wild Color Wheel modal, `7`-Swap Target Picker modal, UNO Shout / Catch alert bar, and Round/Match Podium scoreboard
-- [ ] Add floating emoji reactions & collapsible game log / quick chat drawer
+---
 
-### Phase 5 — Verification, Polish & Cross-Viewport QA
-- [ ] Test responsive layouts across mobile portrait (`375x812`), tablet (`768x1024`), and desktop (`1440x900`) viewports
-- [ ] Run automated unit + integration test suite + production TypeScript/Vite build
-- [ ] Playtest full 2-player and 6-player (humans + bots) matches across Classic, No Mercy, Flip, and Blitz modes
+### Phase 3 — Visual System, Card Art & Sound (`@uno/client`)
+**Goal:** Rich tabletop atmosphere with custom illustrated SVG cards, colorblind accessibility, and tactile Web Audio feedback.
 
-### Phase 6 — GitHub Push & `cs31` Deployment
-- [ ] Add `Dockerfile` (multi-stage Node 22 build), `.dockerignore`, and `docker-compose.yml` (`127.0.0.1:3150:3000`)
-- [ ] Write `DEPLOY.md` with exact Cloudflare Tunnel ingress instructions (`http://localhost:3150`)
-- [ ] Commit & push final release to `https://github.com/someact/UNO`
-- [ ] Clone/pull on `cs31@100.104.87.92`, run `docker compose up -d --build`, verify `/healthz` and WebSocket room play via domain
+- [ ] **3.1** Initialize React + Vite + Tailwind CSS + Framer Motion client workspace with responsive `100dvh` viewport and `overscroll-behavior: none`
+- [ ] **3.2** Create selectable tabletop themes (Classic Emerald Felt, Neon Arcade Lounge, Cozy Wood Café) + dynamic active-color table rim glow
+- [ ] **3.3** Design crisp custom SVG card faces & Light/Dark card backs (`0–9`, `Skip`, `Reverse`, `+1/+2/+5`, `Wild`, `+4/+6/+10`, `Discard All`, `Flip`, `Skip Everyone`, `Wild Draw Color`) with colorblind corner symbols
+- [ ] **3.4** Build animated center arena (Draw Deck stack, Discard Pile with angled throws, spinning Direction Orbit, live Draw-Stack penalty counter badge)
+- [ ] **3.5** Build radial 2–6 player opponent seat badges with illustrated avatars, mini card-fan counts, active turn progress ring, and floating emoji reactions
+- [ ] **3.6** Implement zero-latency Web Audio API sound synthesizer (deal, snap, draw swoosh, flip whoosh, UNO alert, victory chime) + optional mobile vibration haptics + mute toggle; commit & push Phase 3 to GitHub
+
+---
+
+### Phase 4 — Cross-Device UX, Gestures & Game Modals (`@uno/client`)
+**Goal:** Effortless play on phone, tablet, and PC via swipe, drag-and-drop, tap-to-preview, and keyboard shortcuts.
+
+- [ ] **4.1** Build Home & Lobby screen (Name-only entry, Create/Join by Room ID, `?room=XXXX` deep link, QR code share sheet, Host Rule Configurator, Mode Rules Cheat Sheet modal)
+- [ ] **4.2** Build responsive hand tray with **Directional Gesture Locking**: horizontal hand scroll (`dx`), **Swipe-Up-to-Play** (`dy`), **Drag-and-Drop** onto discard pile with magnetic target glow, and **Tap-to-Preview / Double-Tap** safe mode
+- [ ] **4.3** Add Sort Hand button (by color/playable), playable-card elevation & dimming, desktop hover fanning, and keyboard shortcuts (`Arrows`/`1–9`/`Enter`/`Space`/`U`)
+- [ ] **4.4** Build interactive game modals: radial Wild Color Wheel, `7`-Swap Target Picker, `Wild +4` Challenge prompt, `UNO!` / `CATCH!` floating action bar, and Round/Match Score Podium with Rematch button
+- [ ] **4.5** Add floating emoji reaction bar & collapsible chat/event drawer; commit & push Phase 4 to GitHub
+
+---
+
+### Phase 5 — Verification, Responsive QA & Polish
+**Goal:** Verify everything end-to-end across viewports, automated suites, and live multi-client matches.
+
+- [ ] **5.1** Run full `@uno/shared` unit tests + `@uno/server` integration tests + production TypeScript/Vite build
+- [ ] **5.2** Verify responsive UX & gesture interactions across Phone (`375x812`), Tablet (`768x1024`), and Desktop (`1440x900`) viewports
+- [ ] **5.3** Playtest 2-player and 6-player matches across Classic, No Mercy, UNO Flip, and Blitz modes (including reconnect & bot takeover); commit & push Phase 5 to GitHub
+
+---
+
+### Phase 6 — Docker Packaging & `cs31` Deployment
+**Goal:** Ship cleanly to `cs31` behind your Cloudflare Tunnel domain on port `3150`.
+
+- [ ] **6.1** Add multi-stage `Dockerfile` (Node 22 Alpine), `.dockerignore`, and `docker-compose.yml` binding `127.0.0.1:${HOST_PORT:-3150}:3000`
+- [ ] **6.2** Write `DEPLOY.md` documenting `cs31` deploy steps and Cloudflare Zero Trust Tunnel ingress (`http://localhost:3150`)
+- [ ] **6.3** Commit & push final release to `https://github.com/someact/UNO`
+- [ ] **6.4** Clone/pull repo to `cs31@100.104.87.92:~/multi-uno`, run `docker compose up -d --build`, verify `/healthz` and live multiplayer gameplay over your domain
