@@ -2,7 +2,7 @@
 
 Online multiplayer UNO for **PC, tablet, and phone browsers**—join in seconds with just a display name and Room ID, featuring rich custom SVG card illustrations & animations, multiple UNO modes, AI bots, mobile gesture controls, and Docker + Cloudflare Tunnel deployment on `cs31`.
 
-> **Current Progress:** Phase 2 Complete (`@uno/server` + 21/21 Unit & Integration Tests Passing) — Ready for **Phase 3 (`@uno/client` Visual System, Card Art & Sound)**
+> **Current Progress:** Phase 3 Complete (`@uno/client` Visual System, SVG Cards & Audio + 24/24 Tests Passing) — Ready for **Phase 4 (`@uno/client` Lobby, Gestures & Live Game UI)**
 
 ---
 
@@ -61,12 +61,12 @@ Online multiplayer UNO for **PC, tablet, and phone browsers**—join in seconds 
 ### Phase 3 — Visual System, Card Art & Sound (`@uno/client`)
 **Goal:** Rich tabletop atmosphere with custom illustrated SVG cards, colorblind accessibility, and tactile Web Audio feedback.
 
-- [ ] **3.1** Initialize React + Vite + Tailwind CSS + Framer Motion client workspace with responsive `100dvh` viewport and `overscroll-behavior: none`
-- [ ] **3.2** Create selectable tabletop themes (Classic Emerald Felt, Neon Arcade Lounge, Cozy Wood Café) + dynamic active-color table rim glow
-- [ ] **3.3** Design crisp custom SVG card faces & Light/Dark card backs (`0–9`, `Skip`, `Reverse`, `+1/+2/+5`, `Wild`, `+4/+6/+10`, `Discard All`, `Flip`, `Skip Everyone`, `Wild Draw Color`) with colorblind corner symbols
-- [ ] **3.4** Build animated center arena (Draw Deck stack, Discard Pile with angled throws, spinning Direction Orbit, live Draw-Stack penalty counter badge)
-- [ ] **3.5** Build radial 2–6 player opponent seat badges with illustrated avatars, mini card-fan counts, active turn progress ring, and floating emoji reactions
-- [ ] **3.6** Implement zero-latency Web Audio API sound synthesizer (deal, snap, draw swoosh, flip whoosh, UNO alert, victory chime) + optional mobile vibration haptics + mute toggle; commit & push Phase 3 to GitHub
+- [x] **3.1** Initialize React + Vite + Tailwind CSS + Framer Motion client workspace with responsive `100dvh` viewport and `overscroll-behavior: none`
+- [x] **3.2** Create selectable tabletop themes (Classic Emerald Felt, Neon Arcade Lounge, Cozy Wood Café) + dynamic active-color table rim glow (`tableThemes.ts`, `TopBar.tsx`)
+- [x] **3.3** Design crisp custom SVG card faces & Light/Dark card backs (`0–9`, `Skip`, `Reverse`, `+1/+2/+5`, `Wild`, `+4/+6/+10`, `Discard All`, `Flip`, `Skip Everyone`, `Wild Draw Color`) with colorblind corner symbols (`ColorGlyph.tsx`, `CardArtwork.tsx`, `UnoCard.tsx`)
+- [x] **3.4** Build animated center arena (Draw Deck stack, Discard Pile with angled throws, spinning Direction Orbit, live Draw-Stack penalty counter badge) (`CenterArena.tsx`)
+- [x] **3.5** Build radial 2–6 player opponent seat badges with illustrated avatars, mini card-fan counts, active turn progress ring, and floating emoji reactions (`AvatarIllustration.tsx`, `SeatBadge.tsx`, `OpponentRing.tsx`)
+- [x] **3.6** Implement zero-latency Web Audio API sound synthesizer (`soundEngine.ts`) + optional mobile vibration haptics + mute toggle; commit & push Phase 3 to GitHub
 
 ---
 
