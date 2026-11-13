@@ -1,8 +1,8 @@
-# 🃏 Multi-UNO — Project Plan & Task Tracker
+d# 🃏 Multi-UNO — Project Plan & Task Tracker
 
 Online multiplayer UNO for **PC, tablet, and phone browsers**—join in seconds with just a display name and Room ID, featuring rich custom SVG card illustrations & animations, multiple UNO modes, AI bots, mobile gesture controls, and Docker + Cloudflare Tunnel deployment on `cs31`.
 
-> **Current Progress:** Phase 3 Complete (`@uno/client` Visual System, SVG Cards & Audio + 24/24 Tests Passing) — Ready for **Phase 4 (`@uno/client` Lobby, Gestures & Live Game UI)**
+> **Current Progress:** Phase 4 Complete (`@uno/client` Home/Lobby, Directional Gestures, Live Table & Game Modals + 28/28 Tests Passing) — Ready for **Phase 5 (Integration, Cross-Device QA & Full End-to-End Verification)**
 
 ---
 
@@ -73,11 +73,11 @@ Online multiplayer UNO for **PC, tablet, and phone browsers**—join in seconds 
 ### Phase 4 — Cross-Device UX, Gestures & Game Modals (`@uno/client`)
 **Goal:** Effortless play on phone, tablet, and PC via swipe, drag-and-drop, tap-to-preview, and keyboard shortcuts.
 
-- [ ] **4.1** Build Home & Lobby screen (Name-only entry, Create/Join by Room ID, `?room=XXXX` deep link, QR code share sheet, Host Rule Configurator, Mode Rules Cheat Sheet modal)
-- [ ] **4.2** Build responsive hand tray with **Directional Gesture Locking**: horizontal hand scroll (`dx`), **Swipe-Up-to-Play** (`dy`), **Drag-and-Drop** onto discard pile with magnetic target glow, and **Tap-to-Preview / Double-Tap** safe mode
-- [ ] **4.3** Add Sort Hand button (by color/playable), playable-card elevation & dimming, desktop hover fanning, and keyboard shortcuts (`Arrows`/`1–9`/`Enter`/`Space`/`U`)
-- [ ] **4.4** Build interactive game modals: radial Wild Color Wheel, `7`-Swap Target Picker, `Wild +4` Challenge prompt, `UNO!` / `CATCH!` floating action bar, and Round/Match Score Podium with Rematch button
-- [ ] **4.5** Add floating emoji reaction bar & collapsible chat/event drawer; commit & push Phase 4 to GitHub
+- [x] **4.1** Build Home & Lobby screen (Name-only entry, Create/Join by Room ID, `?room=XXXX` deep link, QR code share sheet, Host Rule Configurator, Mode Rules Cheat Sheet modal)
+- [x] **4.2** Build responsive hand tray with **Directional Gesture Locking**: horizontal hand scroll (`dx`), **Swipe-Up-to-Play** (`dy`), **Drag-and-Drop** onto discard pile with magnetic target glow, and **Tap-to-Preview / Double-Tap** safe mode
+- [x] **4.3** Add Sort Hand button (by color/playable), playable-card elevation & dimming, desktop hover fanning, and keyboard shortcuts (`Arrows`/`1–9`/`Enter`/`Space`/`U`)
+- [x] **4.4** Build interactive game modals: radial Wild Color Wheel, `7`-Swap Target Picker, `Wild +4` Challenge prompt, `UNO!` / `CATCH!` floating action bar, and Round/Match Score Podium with Rematch button
+- [x] **4.5** Add floating emoji reaction bar & collapsible chat/event drawer; commit & push Phase 4 to GitHub
 
 ---
 
