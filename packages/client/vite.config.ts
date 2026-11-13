@@ -9,6 +9,18 @@ export default defineConfig({
       '@uno/shared': resolve(__dirname, '../shared/src/index.ts'),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-motion': ['framer-motion'],
+          'vendor-network': ['socket.io-client'],
+          'vendor-ui': ['lucide-react', 'qrcode.react'],
+        },
+      },
+    },
+  },
   server: {
     port: 5173,
     proxy: {

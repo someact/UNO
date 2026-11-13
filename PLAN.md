@@ -1,8 +1,8 @@
-d# 🃏 Multi-UNO — Project Plan & Task Tracker
+# 🃏 Multi-UNO — Project Plan & Task Tracker
 
 Online multiplayer UNO for **PC, tablet, and phone browsers**—join in seconds with just a display name and Room ID, featuring rich custom SVG card illustrations & animations, multiple UNO modes, AI bots, mobile gesture controls, and Docker + Cloudflare Tunnel deployment on `cs31`.
 
-> **Current Progress:** Phase 4 Complete (`@uno/client` Home/Lobby, Directional Gestures, Live Table & Game Modals + 28/28 Tests Passing) — Ready for **Phase 5 (Integration, Cross-Device QA & Full End-to-End Verification)**
+> **Current Progress:** Phase 5 Complete (32/32 Unit + E2E Playtest Tests Passing, Phone/Tablet/Desktop Chromium QA Verified) — Ready for **Phase 6 (Docker Packaging & `cs31` Deployment)**
 
 ---
 
@@ -84,9 +84,9 @@ Online multiplayer UNO for **PC, tablet, and phone browsers**—join in seconds 
 ### Phase 5 — Verification, Responsive QA & Polish
 **Goal:** Verify everything end-to-end across viewports, automated suites, and live multi-client matches.
 
-- [ ] **5.1** Run full `@uno/shared` unit tests + `@uno/server` integration tests + production TypeScript/Vite build
-- [ ] **5.2** Verify responsive UX & gesture interactions across Phone (`375x812`), Tablet (`768x1024`), and Desktop (`1440x900`) viewports
-- [ ] **5.3** Playtest 2-player and 6-player matches across Classic, No Mercy, UNO Flip, and Blitz modes (including reconnect & bot takeover); commit & push Phase 5 to GitHub
+- [x] **5.1** Run full `@uno/shared` unit tests + `@uno/server` integration tests + production TypeScript/Vite build
+- [x] **5.2** Verify responsive UX & gesture interactions across Phone (`375x812`), Tablet (`768x1024`), and Desktop (`1440x900`) viewports
+- [x] **5.3** Playtest 2-player and 6-player matches across Classic, No Mercy, UNO Flip, and Blitz modes (including reconnect & bot takeover); commit & push Phase 5 to GitHub
 
 ---
 

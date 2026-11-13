@@ -405,9 +405,9 @@ export function PlayerHand({
       {/* Horizontal Touch-Scrollable / Fanned Card Tray */}
       <div
         ref={trayRef}
-        className="no-scrollbar touch-pan-x relative flex w-full items-end overflow-x-auto px-4 sm:px-8 pt-6 pb-2"
+        className="no-scrollbar touch-pan-x relative w-full overflow-x-auto pt-6 pb-2"
       >
-        <div className="mx-auto flex items-end">
+        <div className="flex w-max min-w-full items-end justify-center px-4 sm:px-8">
           {sortedHand.map((card, index) => {
             const isPlayable = playableSet.has(card.id);
             const isJumpIn = !isPlayable && jumpInSet.has(card.id);

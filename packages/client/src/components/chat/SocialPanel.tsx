@@ -119,7 +119,7 @@ export function SocialPanel({
             initial={{ opacity: 0, x: 24 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 24 }}
-            className="fixed right-3 bottom-24 sm:bottom-28 z-40 flex h-80 w-[calc(100vw-1.5rem)] max-w-xs flex-col overflow-hidden rounded-3xl border border-white/15 bg-slate-950/92 shadow-2xl backdrop-blur-xl"
+            className="fixed right-3 bottom-36 sm:bottom-40 z-50 flex h-72 sm:h-80 w-[calc(100vw-1.5rem)] max-w-xs flex-col overflow-hidden rounded-3xl border border-white/20 bg-slate-950/95 shadow-2xl backdrop-blur-xl"
           >
             <div className="flex items-center justify-between border-b border-white/10 px-4 py-2.5">
               <span className="font-display text-xs font-extrabold uppercase tracking-wider text-white">

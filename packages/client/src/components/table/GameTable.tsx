@@ -232,7 +232,7 @@ export function GameTable({
     <div className="relative flex h-full flex-col justify-between overflow-hidden">
       {/* Top Bar */}
       <TopBar
-        title={`Room ${room.roomId} • ${MODE_PRESETS[gameState.config.mode].label}`}
+        title={`${room.roomId} · ${MODE_PRESETS[gameState.config.mode].label.replace('UNO ', '').replace(' / Speed UNO', '')}`}
         subtitle={`Round ${gameState.roundNumber}${
           gameState.config.winTargetScore > 0 ? ` • Target ${gameState.config.winTargetScore} pts` : ''
         }${gameState.config.mode === 'flip' ? ` • ${gameState.activeSide.toUpperCase()} SIDE` : ''}`}
@@ -339,7 +339,7 @@ export function GameTable({
       </main>
 
       {/* Drawn Playable Quick Bar OR Self Seat Status + UNO/CATCH + Social Controls */}
-      <div className="relative z-30 mx-auto w-full max-w-4xl px-3 sm:px-6 pb-1 flex flex-col gap-1.5">
+      <div className="relative z-40 mx-auto w-full max-w-4xl px-3 sm:px-6 pb-1 flex flex-col gap-1.5">
         {myDrawnPlayableCard && isPlaying && (
           <DrawnPlayableBanner
             card={myDrawnPlayableCard}
