@@ -2,7 +2,7 @@
 
 Online multiplayer UNO for **PC, tablet, and phone browsers**—join in seconds with just a display name and Room ID, featuring rich custom SVG card illustrations & animations, multiple UNO modes, AI bots, mobile gesture controls, and Docker + Cloudflare Tunnel deployment on `cs31`.
 
-> **Current Progress:** Phase 5 Complete (32/32 Unit + E2E Playtest Tests Passing, Phone/Tablet/Desktop Chromium QA Verified) — Ready for **Phase 6 (Docker Packaging & `cs31` Deployment)**
+> **Current Progress:** **All Phases Complete (0–6)** — Live on `cs31@100.104.87.92:~/multi-uno` (`127.0.0.1:3150`, healthy) & ready for Cloudflare Tunnel routing!
 
 ---
 
@@ -93,7 +93,7 @@ Online multiplayer UNO for **PC, tablet, and phone browsers**—join in seconds 
 ### Phase 6 — Docker Packaging & `cs31` Deployment
 **Goal:** Ship cleanly to `cs31` behind your Cloudflare Tunnel domain on port `3150`.
 
-- [ ] **6.1** Add multi-stage `Dockerfile` (Node 22 Alpine), `.dockerignore`, and `docker-compose.yml` binding `127.0.0.1:${HOST_PORT:-3150}:3000`
-- [ ] **6.2** Write `DEPLOY.md` documenting `cs31` deploy steps and Cloudflare Zero Trust Tunnel ingress (`http://localhost:3150`)
-- [ ] **6.3** Commit & push final release to `https://github.com/someact/UNO`
-- [ ] **6.4** Clone/pull repo to `cs31@100.104.87.92:~/multi-uno`, run `docker compose up -d --build`, verify `/healthz` and live multiplayer gameplay over your domain
+- [x] **6.1** Add multi-stage `Dockerfile` (Node 22 Alpine), `.dockerignore`, and `docker-compose.yml` binding `127.0.0.1:${HOST_PORT:-3150}:3000`
+- [x] **6.2** Write `DEPLOY.md` documenting `cs31` deploy steps and Cloudflare Zero Trust Tunnel ingress (`http://localhost:3150`)
+- [x] **6.3** Commit & push final release to `https://github.com/someact/UNO`
+- [x] **6.4** Clone/pull repo to `cs31@100.104.87.92:~/multi-uno`, run `docker compose up -d --build`, verify `/healthz` and live multiplayer gameplay over your domain
