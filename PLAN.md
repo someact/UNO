@@ -2,7 +2,7 @@
 
 Online multiplayer UNO for **PC, tablet, and phone browsers**—join in seconds with just a display name and Room ID, featuring rich custom SVG card illustrations & animations, multiple UNO modes, AI bots, mobile gesture controls, and Docker + Cloudflare Tunnel deployment on `cs31`.
 
-> **Current Progress:** Phase 1 Complete (`@uno/shared` Engine & 16/16 Unit Tests Passing) — Ready for **Phase 2 (`@uno/server`)**
+> **Current Progress:** Phase 2 Complete (`@uno/server` + 21/21 Unit & Integration Tests Passing) — Ready for **Phase 3 (`@uno/client` Visual System, Card Art & Sound)**
 
 ---
 
@@ -49,12 +49,12 @@ Online multiplayer UNO for **PC, tablet, and phone browsers**—join in seconds 
 ### Phase 2 — Authoritative Multiplayer Server (`@uno/server`)
 **Goal:** Real-time Socket.IO game server with room management, reconnect persistence, smart AI bots, timers, and abuse protection.
 
-- [ ] **2.1** Set up Express + Socket.IO server with `/healthz` endpoint, CORS/origin support, and production static serving
-- [ ] **2.2** Build `RoomManager` & `Room` lifecycle (short Room ID generator, max 6 players, late-joiner Spectator mode, automatic Host Migration on disconnect, idle room TTL garbage collection)
-- [ ] **2.3** Implement `localStorage` session token reconnection + optional bot auto-takeover on disconnect
-- [ ] **2.4** Implement server-authoritative turn countdown timers + automatic timeout fallback (auto-draw / keep / random valid color)
-- [ ] **2.5** Build AI Bot engine (`Casual` & `Smart` difficulties: stack defense, best-color selection, `7`-swap targeting lowest-card rival, human-like reaction delay & UNO shout probability)
-- [ ] **2.6** Add input sanitization, chat/reaction rate limiting, and Socket.IO integration tests; commit & push Phase 2 to GitHub
+- [x] **2.1** Set up Express + Socket.IO server with `/healthz` endpoint, CORS/origin support, and production static serving (`server.ts`, `index.ts`)
+- [x] **2.2** Build `RoomManager` & `Room` lifecycle (short 5-char Room ID generator, max 6 players, late-joiner Spectator mode & auto-promotion, automatic Host Migration on disconnect, idle room TTL garbage collection)
+- [x] **2.3** Implement server-side session token issuance/reconnection (`room:reconnect` / `sessionToken`) + AI bot auto-takeover on disconnect (client `localStorage` persistence wired in Phase 4)
+- [x] **2.4** Implement server-authoritative turn countdown timers (`turnDeadlineAt`) + automatic timeout fallback (`timeout_turn`)
+- [x] **2.5** Build AI Bot engine (`Casual` & `Smart` difficulties: stack defense, best-color selection, `7`-swap targeting lowest-card rival, reaction delay & UNO shout/catch timing)
+- [x] **2.6** Add input sanitization, chat/reaction sliding-window rate limiting, and Socket.IO integration tests; commit & push Phase 2 to GitHub
 
 ---
 
